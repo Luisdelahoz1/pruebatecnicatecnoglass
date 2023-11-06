@@ -79,7 +79,7 @@ export default {
 <style scoped>
 .movie-list-container {
   font-family: Arial, sans-serif;
-  background-color: #fff;
+  background-color: #f0f0f0;
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -101,11 +101,11 @@ input {
   width: 100%;
 }
 
-  .main {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
 .movie-list {
   list-style: none;
@@ -126,7 +126,6 @@ input {
 
 .movie-title {
   font-weight: bold;
-  cursor: pointer;
 }
 
 .movie-year {
@@ -140,5 +139,12 @@ input {
 img {
   max-width: 100%;
   height: auto;
+}
+
+.no-matches-message {
+  text-align: center;
+  font-weight: bold;
+  color: #555;
+  margin: 20px;
 }
 </style>
