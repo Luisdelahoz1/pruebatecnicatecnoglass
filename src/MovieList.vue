@@ -11,11 +11,14 @@
   <div v-if="movies.length === 0 && !errorMessage" class="no-matches-message">No se encontraron coincidencias.</div>
   <!-- Si hay películas o mensaje de error, muestra la lista de películas si corresponde -->
   <ul class="movie-list" v-else>
-    <li v-for="movie in movies" :key="movie.imdbID" class="movie-item">
-      <div class="movie-title" @click="showMovieDetails(movie)">{{ movie.Title }}</div>
-      <div class="movie-year">Year: {{ movie.Year }}</div>
-      <div class="movie-plot">Plot: {{ movie.Plot }}</div>
-      <img :src="movie.Poster" alt="Póster de la película" />
+  <li v-for="movie in movies" :key="movie.imdbID" class="movie-item">
+    <div class="movie-title" @click="showMovieDetails(movie)">{{ movie.Title }}</div>
+    <div class="movie-year">Year: {{ movie.Year }}</div>
+    <div class="movie-plot">Plot: {{ movie.Plot }}</div>
+
+    <!-- Verifica si 'movie.Poster' contiene una URL de imagen válida y muestra la imagen correspondiente -->
+    <img :src="isValidImageUrl(movie.Poster) ? movie.Poster : 'https://alhudood.net/_next/image?url=https%3A%2F%2Fcms.alhudood.net%2Fassets%2Fimages%2Fdefault-thumbnail.jpg&w=1440&q=75'" alt="Póster de la película" />
+
     </li>
   </ul>
 </main>
@@ -34,11 +37,15 @@ export default {
     const movies = ref([]);
     const errorMessage = ref(''); 
 
+    const isValidImageUrl = (url) => {
+      return url && /\.(jpg|jpeg|png|gif)$/.test(url);
+    };
+
     const searchMovies = async () => {
   try {
     const response = await fetch(`https://www.omdbapi.com/?s=${searchQuery.value}&apikey=141f3356`);
     
-    if (!response) {
+    if (!response) {  
       errorMessage.value = 'Error al realizar la solicitud. Por favor, inténtalo de nuevo.';
       console.error(errorMessage.value);
       return;
@@ -68,9 +75,10 @@ export default {
     return {
       searchQuery,
       movies,
-      errorMessage, // Incluye 'errorMessage' en los valores devueltos por setup
+      errorMessage, 
       searchMovies,
       showMovieDetails,
+      isValidImageUrl,
     };
   },
 };
