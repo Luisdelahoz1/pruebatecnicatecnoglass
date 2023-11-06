@@ -38,7 +38,6 @@ export default {
         this.jsonResponse = JSON.stringify(data, null, 2);
         this.showJsonResponse = true;
       } catch (error) {
-        console.error('Error al obtener la respuesta JSON completa:', error);
       }
     },
   },

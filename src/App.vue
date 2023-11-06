@@ -11,8 +11,8 @@
 
 <script>
 import { ref } from 'vue';
-import MovieDetails from './MovieDetails.vue';
-import MovieList from './MovieList.vue';
+import MovieDetails from '../src/components/MovieDetails.vue';
+import MovieList from '../src/components/MovieList.vue';
 
 export default {
   setup() {
@@ -22,9 +22,6 @@ export default {
     const showMovieDetails = (movie) => {
       selectedMovie.value = movie;
       showDetails.value = true;
-    };
-
-    const viewFullResponse = () => {a
     };
 
     return {
