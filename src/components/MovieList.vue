@@ -5,22 +5,12 @@
       <input v-model="searchQuery" @input="searchMovies" placeholder="Buscar película" />
     </header>
     <main class="main">
-  <!-- Muestra el mensaje de error si errorMessage tiene contenido -->
-  <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-  <!-- Verifica si no se encontraron coincidencias y muestra un mensaje -->
-  <div v-if="movies.length === 0 && !errorMessage" class="no-matches-message">No se encontraron coincidencias.</div>
-  <!-- Si hay películas o mensaje de error, muestra la lista de películas si corresponde -->
-  <ul class="movie-list" v-else>
-  <li v-for="movie in movies" :key="movie.imdbID" class="movie-item">
-    <div class="movie-title" @click="showMovieDetails(movie)">{{ movie.Title }}</div>
-    <div class="movie-year">Year: {{ movie.Year }}</div>
-    <div class="movie-plot">Plot: {{ movie.Plot }}</div>
-
-    <!-- Verifica si 'movie.Poster' contiene una URL de imagen válida y muestra la imagen correspondiente -->
-    <img :src="isValidImageUrl(movie.Poster) ? movie.Poster : 'https://alhudood.net/_next/image?url=https%3A%2F%2Fcms.alhudood.net%2Fassets%2Fimages%2Fdefault-thumbnail.jpg&w=1440&q=75'" alt="Póster de la película" />
+    <li v-for="movie in movies" :key="movie.imdbID" class="movie-item">
+      <div class="movie-title" @click="showMovieDetails(movie)">{{ movie.Title }}</div>
+      <div class="movie-year">Year: {{ movie.Year }}</div>
+      <img :src="isValidImageUrl(movie.Poster) ? movie.Poster : 'https://cdn.icon-icons.com/icons2/3001/PNG/512/default_filetype_file_empty_document_icon_187718.png'" alt="Póster de la película" />
 
     </li>
-  </ul>
 </main>
 
   </div>
@@ -37,15 +27,17 @@ export default {
     const movies = ref([]);
     const errorMessage = ref(''); 
 
+
+    // Función para verificar si una URL de imagen es válida
     const isValidImageUrl = (url) => {
-      return url && /\.(jpg|jpeg|png|gif)$/.test(url);
+      return url && /\.(jpg|png)$/.test(url);
     };
 
     const searchMovies = async () => {
   try {
     const response = await fetch(`https://www.omdbapi.com/?s=${searchQuery.value}&apikey=141f3356`);
     
-    if (!response) {  
+    if (!response) {
       errorMessage.value = 'Error al realizar la solicitud. Por favor, inténtalo de nuevo.';
       return;
     }
@@ -61,20 +53,16 @@ export default {
       errorMessage.value = 'No se encontraron coincidencias.';
     }
   } catch (error) {
-    console.error('Error al buscar películas:', error);
     errorMessage.value = 'Error al buscar películas. Por favor, inténtalo de nuevo.';
   }
 };
 
- 
-
     return {
       searchQuery,
       movies,
-      errorMessage, 
+      errorMessage, // Incluye 'errorMessage' en los valores devueltos por setup
       searchMovies,
-      showMovieDetails,
-      isValidImageUrl,
+      isValidImageUrl
     };
   },
 };
@@ -101,7 +89,7 @@ header h1 {
 }
 
 input {
-  padding: 10px;
+  padding: 5px;
   width: 100%;
 }
 
@@ -136,9 +124,6 @@ main {
   font-weight: bold;
 }
 
-.movie-plot {
-  color: #555;
-}
 
 img {
   max-width: 100%;

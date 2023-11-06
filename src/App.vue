@@ -24,6 +24,9 @@ export default {
       showDetails.value = true;
     };
 
+    const viewFullResponse = () => {a
+    };
+
     return {
       selectedMovie,
       showDetails,

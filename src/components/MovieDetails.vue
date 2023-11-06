@@ -1,49 +1,79 @@
 <template>
   <div>
-    <h2>Detalles de la película</h2>
-    <table>
-      <!-- Detalles de la película -->
-    </table>
-    <button @click="viewFullResponse">Ver respuesta completa</button>
-
-    <div v-if="showJsonResponse" class="json-response">
-      <pre>{{ jsonResponse }}</pre>
-    </div>
+    <header>
+      <h1>Buscador de Películas</h1>
+      <input v-model="searchQuery" @input="searchMovies" placeholder="Buscar película" />
+    </header>
+    <main class="main">
+      <!-- Muestra el mensaje de error si errorMessage tiene contenido -->
+      <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+      <!-- Verifica si no se encontraron coincidencias y muestra un mensaje -->
+      <div v-if="movies.length === 0 && !errorMessage" class="no-matches-message">No se encontraron coincidencias.</div>
+      <!-- Si hay películas o mensaje de error, muestra la lista de películas si corresponde -->
+      <ul class="movie-list" v-else>
+       
+      </ul>
+    </main>
   </div>
 </template>
 
 <script>
-export default {
-  props: {
-    selectedMovie: Object,
-  },
-  data() {
-    return {
-      showJsonResponse: false,
-      jsonResponse: null,
-    };
-  },
-  methods: {
-    viewFullResponse() {
-      this.fetchFullResponse();
-    },
-    async fetchFullResponse() {
-      // Realiza una solicitud adicional a la API 
+import { ref } from 'vue';
 
+export default {
+  setup() {
+    // Declaración de variables reactivas
+    const searchQuery = ref('');      // Búsqueda de películas
+    const movies = ref([]);           // Lista de películas
+    const errorMessage = ref('');     // Mensaje de error
+
+   
+
+    // Función para buscar películas
+    const searchMovies = async () => {
       try {
-        const response = await fetch(`https://www.omdbapi.com/?i=${this.selectedMovie.imdbID}&apikey=141f3356`);
+        const response = await fetch(`https://www.omdbapi.com/?s=${searchQuery.value}&apikey=141f3356`);
+        
+        if (!response) {
+          errorMessage.value = 'Error al realizar la solicitud. Por favor, inténtalo de nuevo.';
+          console.error(errorMessage.value);
+          return;
+        }
+
         const data = await response.json();
 
-        // Actualiza la respuesta JSON completa y muestra la sección
-        this.jsonResponse = JSON.stringify(data, null, 2);
-        this.showJsonResponse = true;
+        if (data.Response === 'True') {
+          // Si se encontraron coincidencias, asigna los resultados a 'movies'
+          movies.value = data.Search;
+        } else {
+          // Si no se encontraron coincidencias, muestra un mensaje de error apropiado y vacía la lista de películas
+          movies.value = [];
+          errorMessage.value = '';
+          console.error(errorMessage.value);
+        }
       } catch (error) {
+        console.error('Error al buscar películas:', error);
+        errorMessage.value = 'Error al buscar películas. Por favor, inténtalo de nuevo.';
       }
-    },
+    };
+
+    // Función para mostrar detalles de una película
+    const showMovieDetails = (movie) => {
+      // Implementa la lógica para mostrar los detalles de la película seleccionada.
+    };
+
+    // Valores y funciones disponibles para el componente
+    return {
+      searchQuery,
+      movies,
+      errorMessage, 
+      searchMovies,
+      showMovieDetails,
+      isValidImageUrl,
+    };
   },
 };
 </script>
-
 
 <style scoped>
 .movie-details {
