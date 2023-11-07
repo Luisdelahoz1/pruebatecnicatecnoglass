@@ -99,6 +99,7 @@ header h1 {
 input {
   padding: 5px;
   width: 100%;
+  outline: none;
 }
 
 main {
@@ -126,6 +127,10 @@ main {
 
 .movie-title {
   font-weight: bold;
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .movie-year {
@@ -133,17 +138,11 @@ main {
 }
 
 .movie-poster {
-  max-width: 100%; 
-  max-height: 300px; 
-  height: auto; 
-}
-
-
-img {
   object-fit: cover;
   height: 424px;
   width: 300px;
 }
+
 
 .no-matches-message {
   text-align: center;
