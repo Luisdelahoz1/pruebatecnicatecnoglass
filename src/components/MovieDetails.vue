@@ -17,54 +17,34 @@
   </div>
 </template>
 
+
+
 <script>
 import { ref } from 'vue';
 
 export default {
   setup() {
     // Declaración de variables reactivas
-    const searchQuery = ref('');    
-
-   
-
-    // Función para buscar películas
-    const searchMovies = async () => {
-      try {
-        const response = await fetch(`https://www.omdbapi.com/?s=${searchQuery.value}&apikey=141f3356`);
-        
-        if (!response) {
-          errorMessage.value = 'Error al realizar la solicitud. Por favor, inténtalo de nuevo.';
-          return;
-        }
-
-        const data = await response.json();
-
-        if (data.Response === 'True') {
-          // Si se encontraron coincidencias, asigna los resultados a 'movies'
-          movies.value = data.Search;
-        } else {
-          // Si no se encontraron coincidencias, muestra un mensaje de error apropiado y vacía la lista de películas
-          movies.value = [];
-          errorMessage.value = '';
-        }
-      } catch (error) {
-        errorMessage.value = 'Error al buscar películas. Por favor, inténtalo de nuevo.';
-      }
-    };
-
+    const searchQuery = ref('');
+    const movies = ref([]);
+    const errorMessage = ref('');
+    const movieDetail = ref(null); // Agregamos una variable reactiva para almacenar los detalles de la película
+    
     // Función para mostrar detalles de una película
     const showMovieDetails = (movie) => {
-      // Implementa la lógica para mostrar los detalles de la película seleccionada.
+      // Establecemos los detalles de la película en la variable movieDetail
+      movieDetail.value = movie;
     };
 
     // Valores y funciones disponibles para el componente
     return {
       searchQuery,
       movies,
-      errorMessage, 
+      errorMessage,
       searchMovies,
       showMovieDetails,
       isValidImageUrl,
+      movieDetail, // Agregamos movieDetail a los valores devueltos por setup
     };
   },
 };
