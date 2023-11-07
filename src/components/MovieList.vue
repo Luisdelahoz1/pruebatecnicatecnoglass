@@ -6,9 +6,9 @@
     </header>
     <main class="main">
       <!-- Muestra el mensaje de error si errorMessage tiene contenido -->
-      <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+      <div v-if="!errorMessage" class="error-message">{{ errorMessage }}</div>
       <!-- Verifica si no se encontraron coincidencias y muestra un mensaje -->
-      <div v-if="movies.length === 0 && !errorMessage" class="no-matches-message">No se encontraron coincidencias.</div>
+      <div v-else-if="movies.length === 0 && errorMessage" class="no-matches-message">No se encontraron coincidencias.</div>
 
       <!-- Si hay películas o mensaje de error, muestra la lista de películas si corresponde -->
       <ul class="movie-list" v-else>
@@ -140,8 +140,9 @@ main {
 
 
 img {
-  max-width: 100%;
-  height: auto;
+  object-fit: cover;
+  height: 424px;
+  width: 300px;
 }
 
 .no-matches-message {

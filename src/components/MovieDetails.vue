@@ -1,19 +1,19 @@
 <template>
   <div>
-    <header>
-      <h1>Buscador de Películas</h1>
-      <input v-model="searchQuery" @input="searchMovies" placeholder="Buscar película" />
-    </header>
-    <main class="main">
-      <!-- Muestra el mensaje de error si errorMessage tiene contenido -->
-      <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-      <!-- Verifica si no se encontraron coincidencias y muestra un mensaje -->
-      <div v-if="movies.length === 0 && !errorMessage" class="no-matches-message">No se encontraron coincidencias.</div>
-      <!-- Si hay películas o mensaje de error, muestra la lista de películas si corresponde -->
-      <ul class="movie-list" v-else>
-       
-      </ul>
-    </main>
+    <!-- Muestra los detalles de la película si movieDetail tiene contenido -->
+    <div v-if="movieDetail" class="movie-details">
+      <h2>Detalles de la película</h2>
+      <table>
+        <tr>
+          <td>Título:</td>
+          <td>{{ movieDetail.Title }}</td>
+        </tr>
+        <tr>
+          <td>Año:</td>
+          <td>{{ movieDetail.Year }}</td>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -23,9 +23,7 @@ import { ref } from 'vue';
 export default {
   setup() {
     // Declaración de variables reactivas
-    const searchQuery = ref('');      // Búsqueda de películas
-    const movies = ref([]);           // Lista de películas
-    const errorMessage = ref('');     // Mensaje de error
+    const searchQuery = ref('');    
 
    
 
