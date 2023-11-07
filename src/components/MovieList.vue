@@ -18,22 +18,28 @@
           <img
             :src="isValidImageUrl(movie.Poster) ? movie.Poster : 'https://cdn.icon-icons.com/icons2/3001/PNG/512/default_filetype_file_empty_document_icon_187718.png'"
             alt="Póster de la película" class="movie-poster"
+            @click="showMovieDetails(movie)"
           />
         </li>
       </ul>
     </main>
+    <MovieDetails :movieDetail="selectedMovie" v-if="selectedMovie" @close="closeMovieDetails" />
   </div>
 </template>
 
 <script>
 import { ref } from 'vue';
+import MovieDetails from './MovieDetails.vue';
 
 export default {
-
+  components: {
+    MovieDetails,
+  },
   setup() {
     const movies = ref([]); // Inicializa movies con una lista vacía
     const searchQuery = ref('');
-    const errorMessage = ref(''); 
+    const errorMessage = ref('');
+    const selectedMovie = ref(null);
 
 
     // Función para verificar si una URL de imagen es válida
@@ -42,35 +48,46 @@ export default {
     };
 
     const searchMovies = async () => {
-  try {
-    const response = await fetch(`https://www.omdbapi.com/?s=${searchQuery.value}&apikey=141f3356`);
-    
-    if (!response) {
-      errorMessage.value = 'Error al realizar la solicitud. Por favor, inténtalo de nuevo.';
-      return;
-    }
+      try {
+        const response = await fetch(`https://www.omdbapi.com/?s=${searchQuery.value}&apikey=141f3356`);
+        
+        if (!response) {
+          errorMessage.value = 'Error al realizar la solicitud. Por favor, inténtalo de nuevo.';
+          return;
+        }
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (data.Response === 'True') {
-      // Si se encontraron coincidencias, asigna los resultados a 'movies'
-      movies.value = data.Search;
-    } else {
-      // Si no se encontraron coincidencias, muestra un mensaje de error apropiado y vacía la lista de películas
-      movies.value = [];
-      errorMessage.value = 'No se encontraron coincidencias.';
-    }
-  } catch (error) {
-    errorMessage.value = 'Error al buscar películas. Por favor, inténtalo de nuevo.';
-  }
-};
+        if (data.Response === 'True') {
+          // Si se encontraron coincidencias, asigna los resultados a 'movies'
+          movies.value = data.Search;
+        } else {
+          // Si no se encontraron coincidencias, muestra un mensaje de error apropiado y vacía la lista de películas
+          movies.value = [];
+          errorMessage.value = 'No se encontraron coincidencias.';
+        }
+      } catch (error) {
+        errorMessage.value = 'Error al buscar películas. Por favor, inténtalo de nuevo.';
+      }
+    };
+
+    const showMovieDetails = (movie) => {
+      selectedMovie.value = movie;
+    };
+
+    const closeMovieDetails = () => {
+      selectedMovie.value = null;
+    };
 
     return {
       searchQuery,
       movies,
       errorMessage, // Incluye 'errorMessage' en los valores devueltos por setup
       searchMovies,
-      isValidImageUrl
+      isValidImageUrl,
+      showMovieDetails,
+      selectedMovie,
+      closeMovieDetails,
     };
   },
 };
