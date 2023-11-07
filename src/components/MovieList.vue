@@ -85,9 +85,7 @@ export default {
       errorMessage, // Incluye 'errorMessage' en los valores devueltos por setup
       searchMovies,
       isValidImageUrl,
-      showMovieDetails,
       selectedMovie,
-      closeMovieDetails,
     };
   },
 };
