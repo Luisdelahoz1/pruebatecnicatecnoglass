@@ -5,16 +5,24 @@
       <input v-model="searchQuery" @input="searchMovies" placeholder="Buscar película" />
     </header>
     <main class="main">
-    <li v-for="movie in movies" :key="movie.imdbID" class="movie-item">
-      <div class="movie-title" @click="showMovieDetails(movie)">{{ movie.Title }}</div>
-      <div class="movie-year">Year: {{ movie.Year }}</div>
-      <img :src="isValidImageUrl(movie.Poster) ? movie.Poster : 'https://cdn.icon-icons.com/icons2/3001/PNG/512/default_filetype_file_empty_document_icon_187718.png'" alt="Póster de la película" />
+      <!-- Muestra el mensaje de error si errorMessage tiene contenido -->
+      <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+      <!-- Verifica si no se encontraron coincidencias y muestra un mensaje -->
+      <div v-if="movies.length === 0 && !errorMessage" class="no-matches-message">No se encontraron coincidencias.</div>
 
-    </li>
-</main>
-
+      <!-- Si hay películas o mensaje de error, muestra la lista de películas si corresponde -->
+      <ul class="movie-list" v-else>
+        <li v-for="movie in movies" :key="movie.imdbID" class="movie-item">
+          <div class="movie-title"> {{ movie.Title }}</div>
+          <div class="movie-year">Year: {{ movie.Year }}</div>
+          <img
+            :src="isValidImageUrl(movie.Poster) ? movie.Poster : 'https://cdn.icon-icons.com/icons2/3001/PNG/512/default_filetype_file_empty_document_icon_187718.png'"
+            alt="Póster de la película" class="movie-poster"
+          />
+        </li>
+      </ul>
+    </main>
   </div>
-  
 </template>
 
 <script>
@@ -23,8 +31,8 @@ import { ref } from 'vue';
 export default {
 
   setup() {
+    const movies = ref([]); // Inicializa movies con una lista vacía
     const searchQuery = ref('');
-    const movies = ref([]);
     const errorMessage = ref(''); 
 
 
@@ -100,17 +108,17 @@ main {
 }
 
 .movie-list {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  list-style: none; /* Elimina los puntos de la lista */
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .movie-item {
   margin: 10px;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   text-align: center;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -122,6 +130,12 @@ main {
 
 .movie-year {
   font-weight: bold;
+}
+
+.movie-poster {
+  max-width: 100%; 
+  max-height: 300px; 
+  height: auto; 
 }
 
 
