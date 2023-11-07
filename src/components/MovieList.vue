@@ -94,6 +94,7 @@ header {
 
 header h1 {
   margin: 0;
+  padding-bottom: 1em;
 }
 
 input {
