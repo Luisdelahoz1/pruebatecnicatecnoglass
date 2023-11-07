@@ -1,19 +1,15 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import app from '../App.vue'
-
-
-const routes = [
-  {
-    path: '/',
-    name: 'app',
-    component: app
-  },
-  
-]
+import App from '../App.vue'; 
+import { createRouter, createWebHistory } from 'vue-router';
+import MovieDetails from '../components/MovieDetails.vue';
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  history: createWebHistory(),
+  routes: [
+    { path: '/', component: App },
+    { path: '/movie/:id', component: MovieDetails, props: true } 
+  ]
+});
 
-export default router
+export default router;
+
+

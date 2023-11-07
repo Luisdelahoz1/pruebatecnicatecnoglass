@@ -5,44 +5,40 @@
       <input v-model="searchQuery" @input="searchMovies" placeholder="Buscar película" />
     </header>
     <main class="main">
-      <!-- Muestra el mensaje de error si errorMessage tiene contenido -->
       <div v-if="!errorMessage" class="error-message">{{ errorMessage }}</div>
-      <!-- Verifica si no se encontraron coincidencias y muestra un mensaje -->
       <div v-else-if="movies.length === 0 && errorMessage" class="no-matches-message">No se encontraron coincidencias.</div>
-
-      <!-- Si hay películas o mensaje de error, muestra la lista de películas si corresponde -->
       <ul class="movie-list" v-else>
         <li v-for="movie in movies" :key="movie.imdbID" class="movie-item">
-          <div class="movie-title"> {{ movie.Title }}</div>
+          <button @click="openModal(movie)">{{ movie.Title }}</button>
           <div class="movie-year">Year: {{ movie.Year }}</div>
           <img
             :src="isValidImageUrl(movie.Poster) ? movie.Poster : 'https://cdn.icon-icons.com/icons2/3001/PNG/512/default_filetype_file_empty_document_icon_187718.png'"
             alt="Póster de la película" class="movie-poster"
-            @click="showMovieDetails(movie)"
           />
         </li>
       </ul>
     </main>
-    <MovieDetails :movieDetail="selectedMovie" v-if="selectedMovie" @close="closeMovieDetails" />
+
+    <movie-modal :movieDetail="selectedMovieDetail" :showModal="showModal" @close-modal="showModal = false" />
   </div>
 </template>
 
 <script>
 import { ref } from 'vue';
-import MovieDetails from './MovieDetails.vue';
+import MovieModal from './MovieModal.vue';
 
 export default {
   components: {
-    MovieDetails,
+    MovieModal,
   },
+
   setup() {
-    const movies = ref([]); // Inicializa movies con una lista vacía
+    const movies = ref([]);
     const searchQuery = ref('');
     const errorMessage = ref('');
-    const selectedMovie = ref(null);
+    const selectedMovieDetail = ref(null);
+    const showModal = ref(false);
 
-
-    // Función para verificar si una URL de imagen es válida
     const isValidImageUrl = (url) => {
       return url && /\.(jpg|png)$/.test(url);
     };
@@ -50,7 +46,7 @@ export default {
     const searchMovies = async () => {
       try {
         const response = await fetch(`https://www.omdbapi.com/?s=${searchQuery.value}&apikey=141f3356`);
-        
+
         if (!response) {
           errorMessage.value = 'Error al realizar la solicitud. Por favor, inténtalo de nuevo.';
           return;
@@ -59,10 +55,8 @@ export default {
         const data = await response.json();
 
         if (data.Response === 'True') {
-          // Si se encontraron coincidencias, asigna los resultados a 'movies'
           movies.value = data.Search;
         } else {
-          // Si no se encontraron coincidencias, muestra un mensaje de error apropiado y vacía la lista de películas
           movies.value = [];
           errorMessage.value = 'No se encontraron coincidencias.';
         }
@@ -71,21 +65,20 @@ export default {
       }
     };
 
-    const showMovieDetails = (movie) => {
-      selectedMovie.value = movie;
-    };
-
-    const closeMovieDetails = () => {
-      selectedMovie.value = null;
+    const openModal = (movie) => {
+      selectedMovieDetail.value = movie;
+      showModal.value = true;
     };
 
     return {
       searchQuery,
       movies,
-      errorMessage, // Incluye 'errorMessage' en los valores devueltos por setup
+      errorMessage,
       searchMovies,
       isValidImageUrl,
-      selectedMovie,
+      selectedMovieDetail,
+      showModal,
+      openModal,
     };
   },
 };
@@ -125,7 +118,7 @@ main {
 }
 
 .movie-list {
-  list-style: none; /* Elimina los puntos de la lista */
+  list-style: none; 
     padding: 0;
     display: flex;
     flex-wrap: wrap;

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- Muestra los detalles de la película si movieDetail tiene contenido -->
     <div v-if="movieDetail" class="movie-details">
       <h2>Detalles de la película</h2>
       <table>
@@ -13,9 +12,11 @@
           <td>{{ movieDetail.Year }}</td>
         </tr>
       </table>
+      <router-link to="/">Regresar</router-link>
     </div>
   </div>
 </template>
+
 
 
 
@@ -23,20 +24,26 @@
 import { ref } from 'vue';
 
 export default {
+
+    props: {
+    movieDetail: Object 
+  },
+
   setup() {
-    // Declaración de variables reactivas
+    
     const searchQuery = ref('');
     const movies = ref([]);
     const errorMessage = ref('');
-    const movieDetail = ref(null); // Agregamos una variable reactiva para almacenar los detalles de la película
-    
-    // Función para mostrar detalles de una película
+    const movieDetail = ref(null); 
+
+  
+
     const showMovieDetails = (movie) => {
-      // Establecemos los detalles de la película en la variable movieDetail
+
       movieDetail.value = movie;
     };
 
-    // Valores y funciones disponibles para el componente
+  
     return {
       searchQuery,
       movies,
@@ -44,7 +51,7 @@ export default {
       searchMovies,
       showMovieDetails,
       isValidImageUrl,
-      movieDetail, // Agregamos movieDetail a los valores devueltos por setup
+      movieDetail, 
     };
   },
 };
