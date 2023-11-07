@@ -34,7 +34,6 @@ export default {
         
         if (!response) {
           errorMessage.value = 'Error al realizar la solicitud. Por favor, inténtalo de nuevo.';
-          console.error(errorMessage.value);
           return;
         }
 
@@ -47,10 +46,8 @@ export default {
           // Si no se encontraron coincidencias, muestra un mensaje de error apropiado y vacía la lista de películas
           movies.value = [];
           errorMessage.value = '';
-          console.error(errorMessage.value);
         }
       } catch (error) {
-        console.error('Error al buscar películas:', error);
         errorMessage.value = 'Error al buscar películas. Por favor, inténtalo de nuevo.';
       }
     };
